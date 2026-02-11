@@ -39,6 +39,14 @@ function getArtifactPaths(manifest: Manifest, manifestDir: string): string[] {
   return paths;
 }
 
+function toBase64(data: Uint8Array): string {
+  return Buffer.from(data).toString('base64');
+}
+
+function fromBase64(data: string): Uint8Array {
+  return new Uint8Array(Buffer.from(data, 'base64'));
+}
+
 async function keygen(manifestPath: string): Promise<void> {
   const manifestContent = await readFile(manifestPath, 'utf-8');
   const manifest: Manifest = JSON.parse(manifestContent);
@@ -47,8 +55,8 @@ async function keygen(manifestPath: string): Promise<void> {
   const { secretKey, publicKey } = signer.generateKeys();
   const manifestDir = dirname(manifestPath);
   
-  await writeFile(join(manifestDir, `${manifest.signature.keyId}.priv`), secretKey);
-  await writeFile(join(manifestDir, `${manifest.signature.keyId}.pub`), publicKey);
+  await writeFile(join(manifestDir, `${manifest.signature.keyId}.priv`), toBase64(secretKey));
+  await writeFile(join(manifestDir, `${manifest.signature.keyId}.pub`), toBase64(publicKey));
   
   console.log(`Generated keys: ${manifest.signature.keyId}.priv, ${manifest.signature.keyId}.pub`);
 }
@@ -59,12 +67,13 @@ async function sign(manifestPath: string, privateKeyPath: string): Promise<void>
   const signer = getSigner(manifest.signature.type);
   const manifestDir = dirname(manifestPath);
   
-  const secretKey = new Uint8Array(await readFile(privateKeyPath));
+  const secretKeyBase64 = await readFile(privateKeyPath, 'utf-8');
+  const secretKey = fromBase64(secretKeyBase64.trim());
   const filesToSign = [manifestPath, ...getArtifactPaths(manifest, manifestDir)];
   
   const signature = await signer.signFiles(filesToSign, secretKey);
   const sigPath = join(manifestDir, `${manifest.package.id}.sig`);
-  await writeFile(sigPath, signature);
+  await writeFile(sigPath, toBase64(signature));
   
   console.log(`Signature written to: ${sigPath}`);
 }
@@ -75,8 +84,10 @@ async function verify(manifestPath: string, signaturePath: string, publicKeyPath
   const signer = getSigner(manifest.signature.type);
   const manifestDir = dirname(manifestPath);
   
-  const publicKey = new Uint8Array(await readFile(publicKeyPath));
-  const signature = new Uint8Array(await readFile(signaturePath));
+  const publicKeyBase64 = await readFile(publicKeyPath, 'utf-8');
+  const publicKey = fromBase64(publicKeyBase64.trim());
+  const signatureBase64 = await readFile(signaturePath, 'utf-8');
+  const signature = fromBase64(signatureBase64.trim());
   const filesToVerify = [manifestPath, ...getArtifactPaths(manifest, manifestDir)];
   
   const valid = await signer.verifyFiles(filesToVerify, signature, publicKey);
