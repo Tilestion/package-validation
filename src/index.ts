@@ -5,6 +5,10 @@ import { Ed25519 } from './signers/classical.ts';
 import type { Signer } from './sign.ts';
 
 interface Manifest {
+  package: {
+    id: string;
+    name: string;
+  };
   signature: {
     type: string;
     keyId: string;
@@ -59,7 +63,7 @@ async function sign(manifestPath: string, privateKeyPath: string): Promise<void>
   const filesToSign = [manifestPath, ...getArtifactPaths(manifest, manifestDir)];
   
   const signature = await signer.signFiles(filesToSign, secretKey);
-  const sigPath = join(manifestDir, `${manifest.signature.keyId}.sig`);
+  const sigPath = join(manifestDir, `${manifest.package.id}.sig`);
   await writeFile(sigPath, signature);
   
   console.log(`Signature written to: ${sigPath}`);
