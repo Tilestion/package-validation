@@ -1,4 +1,4 @@
-import { keygen, sign, verify } from "./index"
+import { keygen, sign, verify } from "./index";
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -6,7 +6,7 @@ async function main(): Promise<void> {
   const [mode, manifestPath, ...rest] = args;
 
   if (!mode || !manifestPath) {
-    console.error('Usage: validator <mode> <manifest.json> [options]');
+    console.error('Usage: tilestion-package-validation <mode> <manifest.json> [options]');
     console.error('Modes:');
     console.error('  keygen <manifest.json>                              - Generate keypair');
     console.error('  sign <manifest.json> <private-key>                  - Sign manifest and artifacts');

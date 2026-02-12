@@ -9,7 +9,8 @@
   ],
   "author": "Eliseo Cailloux",
   "license": "GPL-3.0-only",
-  "module": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tilestion/package-validation.git"
@@ -25,16 +26,22 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     }
+  },
+  "bin": {
+    "tilestion-package-validation": "./dist/cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "clean": "rimraf dist",
-    "build": "tsc"
+    "build:js": "bun build src/index.ts --outfile dist/index.js --target node --format esm && bun build src/cli.ts --outfile dist/cli.js --target node --format esm --banner \"#!/usr/bin/env node\"",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build": "npm run clean && npm run build:js && npm run build:types",
+    "prepack": "npm run build"
   },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@types/node": "^24.6.0",
     "rimraf": "^5.0.10",
     "typescript": "^5.9.3"
   },

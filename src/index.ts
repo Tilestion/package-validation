@@ -98,4 +98,3 @@ export async function verify(manifestPath: string, signaturePath: string, public
   
   console.log('Verification successful');
 }
-
