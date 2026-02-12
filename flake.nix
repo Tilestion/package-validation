@@ -15,6 +15,7 @@
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
             bun
+            typescript
             nodejs # for ls
           ];
         };

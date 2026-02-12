@@ -1,7 +1,7 @@
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
 import { createHash } from 'crypto';
 import { readFile } from 'fs/promises';
-import type { Signer } from '../sign.ts';
+import type { Signer } from '../sign';
 
 export class MlDsa implements Signer {
   async signFiles(filePaths: string[], secretKey: Uint8Array): Promise<Uint8Array> {

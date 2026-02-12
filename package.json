@@ -1,16 +1,18 @@
 {
   "name": "package-validation",
+  "version": "0.1.0",
   "module": "src/index.ts",
   "type": "module",
   "private": true,
+  "bin": {
+    "validator": "dist/cli.js"
+  },
   "scripts": {
-    "start": "bun run src/index.ts",
-    "dev": "bun --watch run src/index.ts"
+    "build": "tsc",
+    "bundle": "bun build src/cli.ts --outfile dist/validator.js --target bun --minify"
   },
   "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
+    "@types/bun": "latest",
     "typescript": "^5"
   },
   "dependencies": {

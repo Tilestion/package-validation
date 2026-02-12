@@ -1,6 +1,6 @@
 import { createHash, generateKeyPairSync, sign, verify } from 'crypto';
 import { readFile } from 'fs/promises';
-import type { Signer } from '../sign.ts';
+import type { Signer } from '../sign';
 
 export class Ed25519 implements Signer {
   async signFiles(filePaths: string[], secretKey: Uint8Array): Promise<Uint8Array> {
