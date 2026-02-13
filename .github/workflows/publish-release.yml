@@ -15,11 +15,8 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
       - uses: oven-sh/setup-bun@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
       - run: bun install --frozen-lockfile
-      - run: npm test
+      - run: bun run test
 
   publish-gpr:
     needs: build
@@ -37,8 +34,8 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
       - run: bun install --frozen-lockfile
-      - run: npm run clean
-      - run: npm run build
+      - run: bun run clean
+      - run: bun run build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
