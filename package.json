@@ -39,7 +39,7 @@
     "build:node": "bun build src/index.ts --outfile dist/index.js --target node --format esm && bun build src/cli.ts --outfile dist/cli.js --target node --format esm --banner \"#!/usr/bin/env node\"",
     "build:bun": "bun build src/index.ts --outfile dist/index.js --target bun --format esm && bun build src/cli.ts --outfile dist/cli.js --target bun --format esm --banner \"#!/usr/bin/env bun\"",
     "build:types": "tsc -p tsconfig.types.json",
-    "build": "bun run clean && bun run build:node && npm run build:types",
+    "build": "bun run clean && bun run build:node && bun run build:types",
     "prepack": "bun run build"
   },
   "devDependencies": {
