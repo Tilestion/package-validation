@@ -1,6 +1,6 @@
 {
   "name": "@tilestion/package-validation",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Toollib for signing and validating tilestion packages",
   "keywords": [
     "tilestion",
