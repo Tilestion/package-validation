@@ -1,12 +1,13 @@
 import { createHash, generateKeyPairSync, sign, verify } from 'crypto';
-import { readFile } from 'fs/promises';
+import canonicalize from 'canonicalize';
 import type { Signer } from '../sign';
 
 export class Ed25519 implements Signer {
-  async signFile(filePath: string, secretKey: Uint8Array): Promise<Uint8Array> {
+  async sign(data: object, secretKey: Uint8Array): Promise<Uint8Array> {
     // 1. Read all files and hash their contents
     const hash = createHash('sha512');
-    hash.update(await readFile(filePath));
+    const bytes = new TextEncoder().encode(canonicalize(data));
+    hash.update(bytes);
     
     // 2. Sign the hash using Ed25519
     const signature = sign(null, hash.digest(), {
@@ -18,10 +19,11 @@ export class Ed25519 implements Signer {
     return new Uint8Array(signature);
   }
   
-  async verifyFile(filePath: string, signature: Uint8Array, publicKey: Uint8Array): Promise<boolean> {
+  async verify(data: object, signature: Uint8Array, publicKey: Uint8Array): Promise<boolean> {
     // 1. Read all files and hash their contents
     const hash = createHash('sha512');
-    hash.update(await readFile(filePath));
+    const bytes = new TextEncoder().encode(canonicalize(data));
+    hash.update(bytes);
     
     // 2. Verify the signature
     return verify(null, hash.digest(), {

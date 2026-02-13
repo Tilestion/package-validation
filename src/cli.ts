@@ -6,11 +6,11 @@ async function main(): Promise<void> {
   const [mode, manifestPath, ...rest] = args;
 
   if (!mode || !manifestPath) {
-    console.error('Usage: tilestion-package-validation <mode> <manifest.json> [options]');
-    console.error('Modes:');
-    console.error('  keygen <manifest.json>                              - Generate keypair');
-    console.error('  sign <manifest.json> <private-key>                  - Sign manifest and artifacts');
-    console.error('  verify <manifest.json> <signature> <public-key>     - Verify signature');
+    console.log('Usage: tilestion-package-validation <mode> <manifest.json> [options]');
+    console.log('Modes:');
+    console.log('  keygen <manifest.json>                       - Generate keypair');
+    console.log('  sign <manifest.json> <private-key>           - Sign manifest and artifacts');
+    console.log('  verify <manifest.json> <public-key>          - Verify signature');
     throw new Error('Missing required arguments');
   }
 
@@ -27,11 +27,11 @@ async function main(): Promise<void> {
       break;
     }
     case 'verify': {
-      const [signaturePath, publicKeyPath] = rest;
-      if (!signaturePath || !publicKeyPath) {
-        throw new Error('verify requires: <manifest.json> <signature> <public-key>');
+      const [publicKeyPath] = rest;
+      if (!publicKeyPath) {
+        throw new Error('verify requires: <manifest.json> <public-key>');
       }
-      await verify(manifestPath, signaturePath, publicKeyPath);
+      await verify(manifestPath, publicKeyPath);
       break;
     }
     default:
